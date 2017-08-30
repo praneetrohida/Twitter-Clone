@@ -62,6 +62,17 @@ export default class HomeScreen extends Component {
     super(props);
   }
 
+  componentWillMount() {
+    fetch("https://http://localhost:3000/tweets")
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   tweets = [
     {
       id: 1,

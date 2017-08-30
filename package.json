@@ -13,7 +13,8 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch"
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "serve": "json-server generate.js"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +23,8 @@
     "@expo/vector-icons": "^5.2.0",
     "color": "^2.0.0",
     "expo": "^20.0.0",
+    "faker": "^4.1.0",
+    "lodash": "^4.17.4",
     "native-base": "^2.3.1",
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
