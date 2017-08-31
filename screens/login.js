@@ -26,6 +26,8 @@ import {
   Footer,
   FooterTab
 } from "native-base";
+import { setUsername } from "../actions/loginActions";
+import { connect } from "react-redux";
 
 const styles = StyleSheet.create({
   topMargin: {
@@ -51,6 +53,9 @@ const styles = StyleSheet.create({
   }
 });
 
+@connect(store => {
+  return {};
+})
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -85,7 +90,10 @@ export default class LoginScreen extends Component {
             <Form>
               <Item stackedLabel last>
                 <Label>Phone number, email address, or username</Label>
-                <Input />
+                <Input
+                  onChangeText={username =>
+                    this.props.dispatch(setUsername(username))}
+                />
               </Item>
               <Item stackedLabel last>
                 <Label>Password</Label>

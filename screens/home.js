@@ -19,6 +19,8 @@ import {
   Grid,
   Icon
 } from "native-base";
+import { connect } from "react-redux";
+import { fetchTweets } from "../actions/tweetsActions";
 
 const styles = StyleSheet.create({
   topMargin: {
@@ -57,23 +59,25 @@ const styles = StyleSheet.create({
   }
 });
 
+@connect(store => {
+  return {
+    tweets: store.tweets.tweets,
+    fetchingTweets: store.tweets.fetching,
+    fetchedTweets: store.tweets.fetched,
+    errorTweets: store.tweets.error,
+    username: store.login.username
+  };
+})
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
   }
 
   componentWillMount() {
-    fetch("https://http://localhost:3000/tweets")
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.props.dispatch(fetchTweets());
   }
 
-  tweets = [
+  tweetsTemp = [
     {
       id: 1,
       user: {
@@ -178,6 +182,7 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <Container style={styles.topMargin}>
         <Header noShadow style={{ backgroundColor: "white" }}>
@@ -187,7 +192,7 @@ export default class HomeScreen extends Component {
         </Header>
         <Content style={styles.content}>
           <FlatList
-            data={this.tweets}
+            data={this.props.tweets}
             keyExtractor={this._keyExtractor}
             renderItem={({ item }) =>
               <View style={styles.tweet}>

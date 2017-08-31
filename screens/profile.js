@@ -23,6 +23,9 @@ import {
   Button
 } from "native-base";
 
+import { connect } from "react-redux";
+import { fetchTweets } from "../actions/tweetsActions";
+
 const styles = StyleSheet.create({
   header: {
     paddingTop: 5,
@@ -112,6 +115,15 @@ const styles = StyleSheet.create({
   }
 });
 
+@connect(store => {
+  return {
+    tweets: store.tweets.tweets,
+    fetchingTweets: store.tweets.fetching,
+    fetchedTweets: store.tweets.fetched,
+    errorTweets: store.tweets.error,
+    username: store.login.username
+  };
+})
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -119,7 +131,7 @@ export default class ProfileScreen extends Component {
     console.log(this.user.name);
   }
 
-  tweets = [
+  tweetsTemp = [
     {
       id: 1,
       user: {
@@ -297,7 +309,7 @@ export default class ProfileScreen extends Component {
         </View>
         <View style={{ backgroundColor: "white", marginTop: 8 }}>
           <FlatList
-            data={this.tweets}
+            data={this.props.tweets}
             keyExtractor={this._keyExtractor}
             renderItem={({ item }) =>
               <View style={styles.tweet}>
@@ -307,7 +319,7 @@ export default class ProfileScreen extends Component {
                   activeOpacity={0.75}
                 > */}
                 <View style={{ flex: 1, flexDirection: "row" }}>
-                  <Thumbnail source={{ uri: item.user.avatar }} />
+                  <Thumbnail source={{ uri: this.user.avatar }} />
                   <View
                     style={{
                       flexDirection: "column",
@@ -321,13 +333,13 @@ export default class ProfileScreen extends Component {
                         fontSize: 20
                       }}
                     >
-                      {item.user.name}
+                      {this.user.name}
                     </Text>
 
                     <Text
                       style={{ paddingLeft: 15, color: "#aaa", fontSize: 16 }}
                     >
-                      {"@" + item.user.username}
+                      {"@" + this.user.username}
                     </Text>
                   </View>
                 </View>

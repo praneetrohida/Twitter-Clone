@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^5.2.0",
+    "axios": "^0.16.2",
     "color": "^2.0.0",
     "expo": "^20.0.0",
     "faker": "^4.1.0",
@@ -30,6 +31,10 @@
     "react-native": "^0.47.0",
     "react-native-svg": "^5.4.1",
     "react-navigation": "^1.0.0-beta.11",
-    "redux": "^3.7.2"
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-promise-middleware": "^4.4.1",
+    "redux-thunk": "^2.2.0"
   }
 }

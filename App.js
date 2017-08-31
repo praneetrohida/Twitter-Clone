@@ -10,6 +10,9 @@ import HomeScreen from "./screens/home";
 import ProfileScreen from "./screens/profile";
 import { Root } from "native-base";
 
+import { Provider } from "react-redux";
+import store from "./store";
+
 const AppNavigator = StackNavigator(
   {
     Login: { screen: LoginScreen },
@@ -45,9 +48,9 @@ export default class App extends Component {
       return <Expo.AppLoading />;
     } else
       return (
-        <Root>
+        <Provider store={store}>
           <AppNavigator />
-        </Root>
+        </Provider>
       );
   }
 }

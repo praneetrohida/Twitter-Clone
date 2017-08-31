@@ -12,7 +12,7 @@ module.exports = function() {
           name: faker.name.findName(),
           username: faker.internet.userName(),
           avatar: faker.image.avatar(),
-          cover: faker.image.abstract(),
+          cover: faker.image.image(),
           bio: faker.lorem.sentence(),
           location: faker.address.city(),
           following: faker.random.number(1000),
