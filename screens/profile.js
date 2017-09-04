@@ -22,7 +22,8 @@ import {
   Row,
   Grid,
   Icon,
-  Button
+  Button,
+  Spinner
 } from "native-base";
 import ParallaxScrollView from "react-native-parallax-scroll-view";
 
@@ -126,9 +127,9 @@ const styles = StyleSheet.create({
 
 @connect(store => {
   return {
-    tweets: store.tweets.tweets,
-    fetchingTweets: store.tweets.fetching,
-    fetchedTweets: store.tweets.fetched,
+    userTweets: store.tweets.userTweets,
+    fetchingUserTweets: store.tweets.fetchingUserTweets,
+    fetchedUserTweets: store.tweets.fetchedUserTweets,
     errorTweets: store.tweets.error,
     username: store.login.username
   };
@@ -139,6 +140,10 @@ export default class ProfileScreen extends Component {
     this.user = this.props.navigation.state.params;
     console.log(this.user.name);
     this.state = { scrollY: new Animated.Value(0) };
+  }
+
+  componentWillMount() {
+    this.props.dispatch({ type: "FETCH_USER_TWEETS" });
   }
 
   _keyExtractor = (item, index) => item.id;
@@ -188,7 +193,6 @@ export default class ProfileScreen extends Component {
           }}
           style={styles.avatarbg}
         />
-
         <Thumbnail
           large
           source={{ uri: this.user.avatar }}
@@ -226,62 +230,70 @@ export default class ProfileScreen extends Component {
           </View>
         </View>
         <View style={{ backgroundColor: "white", marginTop: 8 }}>
-          <FlatList
-            data={this.props.tweets}
-            keyExtractor={this._keyExtractor}
-            renderItem={({ item }) => (
-              <View style={styles.tweet}>
-                {/* <TouchableHighlight
+          {this.props.fetchingUserTweets ? (
+            <View
+              contentContainerStyle={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <Spinner color="blue" />
+            </View>
+          ) : (
+            <FlatList
+              data={this.props.userTweets}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item }) => (
+                <View style={styles.tweet}>
+                  {/* <TouchableHighlight
                   onPress={this._profileClick.bind(this, item.user)}
                   underlayColor="white"
                   activeOpacity={0.75}
                 > */}
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                  <Thumbnail source={{ uri: this.user.avatar }} />
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      justifyContent: "flex-start"
-                    }}
-                  >
-                    <Text
+                  <View style={{ flex: 1, flexDirection: "row" }}>
+                    <Thumbnail source={{ uri: this.user.avatar }} />
+                    <View
                       style={{
-                        paddingLeft: 15,
-                        fontWeight: "bold",
-                        fontSize: 20
+                        flexDirection: "column",
+                        justifyContent: "flex-start"
                       }}
                     >
-                      {this.user.name}
-                    </Text>
+                      <Text
+                        style={{
+                          paddingLeft: 15,
+                          fontWeight: "bold",
+                          fontSize: 20
+                        }}
+                      >
+                        {this.user.name}
+                      </Text>
 
-                    <Text
-                      style={{
-                        paddingLeft: 15,
-                        color: "#aaa",
-                        fontSize: 16
-                      }}
-                    >
-                      {"@" + this.user.username}
-                    </Text>
+                      <Text
+                        style={{ paddingLeft: 15, color: "#aaa", fontSize: 16 }}
+                      >
+                        {"@" + this.user.username}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* </TouchableHighlight> */}
+                  <Text style={styles.tweetText}>{item.tweetContent}</Text>
+                  <View style={styles.tweetFooter}>
+                    <Icon name="ios-text-outline">
+                      <Text style={styles.badgeCount}>{item.replies}</Text>
+                    </Icon>
+                    <Icon name="ios-repeat">
+                      <Text style={styles.badgeCount}>{item.retweets}</Text>
+                    </Icon>
+                    <Icon name="ios-heart-outline">
+                      <Text style={styles.badgeCount}>{item.likes}</Text>
+                    </Icon>
+                    <Icon name="ios-mail-outline" />
                   </View>
                 </View>
-                {/* </TouchableHighlight> */}
-                <Text style={styles.tweetText}>{item.tweetContent}</Text>
-                <View style={styles.tweetFooter}>
-                  <Icon name="ios-text-outline">
-                    <Text style={styles.badgeCount}>{item.replies}</Text>
-                  </Icon>
-                  <Icon name="ios-repeat">
-                    <Text style={styles.badgeCount}>{item.retweets}</Text>
-                  </Icon>
-                  <Icon name="ios-heart-outline">
-                    <Text style={styles.badgeCount}>{item.likes}</Text>
-                  </Icon>
-                  <Icon name="ios-mail-outline" />
-                </View>
-              </View>
-            )}
-          />
+              )}
+            />
+          )}
         </View>
       </ScrollView>
     );
