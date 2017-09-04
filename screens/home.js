@@ -21,10 +21,11 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { fetchTweets } from "../actions/tweetsActions";
+import ScrollableTabView from "react-native-scrollable-tab-view";
 
 const styles = StyleSheet.create({
   topMargin: {
-    marginTop: 25
+    // marginTop: 25
   },
   content: {
     padding: 10,
@@ -74,7 +75,7 @@ export default class HomeScreen extends Component {
   }
 
   componentWillMount() {
-    this.props.dispatch(fetchTweets());
+    this.props.dispatch({ type: "FETCH_TWEETS" });
   }
 
   tweetsTemp = [
@@ -194,7 +195,7 @@ export default class HomeScreen extends Component {
           <FlatList
             data={this.props.tweets}
             keyExtractor={this._keyExtractor}
-            renderItem={({ item }) =>
+            renderItem={({ item }) => (
               <View style={styles.tweet}>
                 <TouchableHighlight
                   onPress={this._profileClick.bind(this, item.user)}
@@ -227,28 +228,21 @@ export default class HomeScreen extends Component {
                     </View>
                   </View>
                 </TouchableHighlight>
-                <Text style={styles.tweetText}>
-                  {item.tweetContent}
-                </Text>
+                <Text style={styles.tweetText}>{item.tweetContent}</Text>
                 <View style={styles.tweetFooter}>
                   <Icon name="ios-text-outline">
-                    <Text style={styles.badgeCount}>
-                      {item.replies}
-                    </Text>
+                    <Text style={styles.badgeCount}>{item.replies}</Text>
                   </Icon>
                   <Icon name="ios-repeat">
-                    <Text style={styles.badgeCount}>
-                      {item.retweets}
-                    </Text>
+                    <Text style={styles.badgeCount}>{item.retweets}</Text>
                   </Icon>
                   <Icon name="ios-heart-outline">
-                    <Text style={styles.badgeCount}>
-                      {item.likes}
-                    </Text>
+                    <Text style={styles.badgeCount}>{item.likes}</Text>
                   </Icon>
                   <Icon name="ios-mail-outline" />
                 </View>
-              </View>}
+              </View>
+            )}
           />
         </Content>
       </Container>

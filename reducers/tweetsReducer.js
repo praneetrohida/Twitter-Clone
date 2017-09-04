@@ -8,7 +8,7 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "FETCH_TWEETS": {
+    case "FETCH_TWEETS_STARTED": {
       return { ...state, fetching: true };
       break;
     }

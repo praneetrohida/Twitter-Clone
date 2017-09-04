@@ -31,7 +31,7 @@ import { connect } from "react-redux";
 
 const styles = StyleSheet.create({
   topMargin: {
-    marginTop: 25
+    // marginTop: 25
   },
   content: {
     padding: 10,
@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 0.2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
     height: 60
   }
 });
@@ -66,7 +66,7 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <StyleProvider style={getTheme(material)}>
+      <StyleProvider style={getTheme(platform)}>
         <Container style={styles.topMargin}>
           <Header noShadow style={{ backgroundColor: "white" }}>
             <Left style={{ flex: 1 }} />

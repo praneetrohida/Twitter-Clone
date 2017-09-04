@@ -12,6 +12,7 @@ import { Root } from "native-base";
 
 import { Provider } from "react-redux";
 import store from "./store";
+import "regenerator-runtime/runtime";
 
 const AppNavigator = StackNavigator(
   {
