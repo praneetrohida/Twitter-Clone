@@ -58,10 +58,15 @@ const styles = StyleSheet.create({
   tweetFooter: {
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 10
+    padding: 0
   },
   badgeCount: {
-    fontSize: 10
+    fontSize: 12,
+    paddingLeft: 5
+  },
+  footerIcons: {
+    flexDirection: "row",
+    alignItems: "center"
   }
 });
 
@@ -146,16 +151,21 @@ export default class HomeScreen extends Component {
                 </TouchableHighlight>
                 <Text style={styles.tweetText}>{item.tweetContent}</Text>
                 <View style={styles.tweetFooter}>
-                  <Icon name="ios-text-outline">
+                  <View style={styles.footerIcons}>
+                    <Icon name="ios-text-outline" />
                     <Text style={styles.badgeCount}>{item.replies}</Text>
-                  </Icon>
-                  <Icon name="ios-repeat">
+                  </View>
+                  <View style={styles.footerIcons}>
+                    <Icon name="ios-repeat" />
                     <Text style={styles.badgeCount}>{item.retweets}</Text>
-                  </Icon>
-                  <Icon name="ios-heart-outline">
+                  </View>
+                  <View style={styles.footerIcons}>
+                    <Icon name="ios-heart-outline" />
                     <Text style={styles.badgeCount}>{item.likes}</Text>
-                  </Icon>
-                  <Icon name="ios-mail-outline" />
+                  </View>
+                  <View style={styles.footerIcons}>
+                    <Icon name="ios-mail-outline" />
+                  </View>
                 </View>
               </View>
             )}

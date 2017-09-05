@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   avatarbg: {
-    marginTop: -95,
+    //marginTop: -95,
     marginLeft: 20,
     padding: 10,
     width: 100,
@@ -121,7 +121,12 @@ const styles = StyleSheet.create({
     padding: 10
   },
   badgeCount: {
-    fontSize: 10
+    fontSize: 12,
+    paddingLeft: 5
+  },
+  footerIcons: {
+    flexDirection: "row",
+    alignItems: "center"
   }
 });
 
@@ -146,6 +151,11 @@ export default class ProfileScreen extends Component {
     this.props.dispatch({ type: "FETCH_USER_TWEETS" });
   }
 
+  _goBack() {
+    console.log("Back button pressed");
+    this.props.navigation.goBack();
+  }
+
   _keyExtractor = (item, index) => item.id;
 
   render() {
@@ -153,149 +163,246 @@ export default class ProfileScreen extends Component {
       inputRange: [0, 390, 391],
       outputRange: [0, -390, -390]
     });
-    var CoverMov = this.state.scrollY.interpolate({
+    var coverMov = this.state.scrollY.interpolate({
       inputRange: [0, 94, 95],
       outputRange: [0, -94, -94]
     });
-    var headColor = this.state.scrollY.interpolate({
-      inputRange: [0, 331],
-      outputRange: ["red", "blue"]
+    var avatarMov = this.state.scrollY.interpolate({
+      inputRange: [0, 150, 151],
+      outputRange: [0, -150, -150]
+    });
+    var avatarOp = this.state.scrollY.interpolate({
+      inputRange: [0, 94, 95],
+      outputRange: [1, 0, 0]
+    });
+    var headerOp = this.state.scrollY.interpolate({
+      inputRange: [95, 180, 181],
+      outputRange: [0, 0.75, 0.75]
+    });
+    var headerContentOp = this.state.scrollY.interpolate({
+      inputRange: [0, 180, 210],
+      outputRange: [0, 0, 1]
     });
     return (
-      <ScrollView>
-        <Image
+      <View style={{ flex: 1 }}>
+        <Animated.Image
           source={{ uri: this.user.cover }}
-          style={{ marginTop: 25, width: "100%", height: 150 }}
-        />
-        <View style={styles.header}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-            <Button bordered rounded style={styles.headerButton}>
-              <Icon name="ios-mail-outline" />
-            </Button>
-            <Button bordered rounded style={styles.headerButton}>
-              <Icon name="ios-notifications-outline" />
-            </Button>
-            <Button
-              bordered
-              rounded
-              style={
-                (styles.headerButton, { paddingLeft: 15, paddingRight: 15 })
-              }
-            >
-              <Text>Follow</Text>
-            </Button>
-          </View>
-        </View>
-        <Thumbnail
-          large
-          source={{
-            uri: "https://data.humdata.org/crisis-tiles/12/2485/1645.png"
+          style={{
+            marginTop: Expo.Constants.statusBarHeight,
+            width: "100%",
+            height: 150,
+            zIndex: 2,
+            position: "absolute",
+            transform: [{ translateY: coverMov }]
           }}
-          style={styles.avatarbg}
         />
-        <Thumbnail
-          large
-          source={{ uri: this.user.avatar }}
-          style={styles.avatar}
-        />
-        <View style={styles.header}>
-          <Text style={styles.nameText}>{this.user.name}</Text>
-          <Text style={styles.usernameText}>{"@" + this.user.username}</Text>
-          <Text style={styles.bioText}>{this.user.bio}</Text>
-          <Text style={styles.locationText}>
-            <Icon small name="ios-pin-outline" style={{ fontSize: 16 }} />
-            {" " + this.user.location}
-          </Text>
-          <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{ fontSize: 16, fontWeight: "bold", marginLeft: 14 }}
+        <Animated.View
+          style={{
+            width: "100%",
+            position: "absolute",
+            backgroundColor: "#121212",
+            height: 56 + Expo.Constants.statusBarHeight,
+            zIndex: 13,
+            opacity: headerOp,
+            paddingTop: Expo.Constants.statusBarHeight,
+            alignItems: "center"
+          }}
+        >
+          <Animated.View
+            style={{
+              opacity: headerContentOp,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start"
+            }}
+          >
+            <Button
+              transparent
+              iconLeft
+              light
+              onPress={this._goBack.bind(this)}
+            >
+              <Icon name="arrow-back" />
+            </Button>
+            <Text style={{ fontSize: 24, color: "white", flex: 1 }}>
+              {this.user.name}
+            </Text>
+            <Button transparent iconRight light>
+              <Icon name="md-more" />
+            </Button>
+          </Animated.View>
+        </Animated.View>
+        <Animated.View
+          style={{
+            zIndex: 4,
+            position: "absolute",
+            top: 135,
+            opacity: avatarOp,
+            transform: [{ translateY: avatarMov }]
+          }}
+        >
+          <Thumbnail
+            large
+            source={{
+              uri: "https://data.humdata.org/crisis-tiles/12/2485/1645.png"
+            }}
+            style={styles.avatarbg}
+          />
+          <Thumbnail
+            large
+            source={{ uri: this.user.avatar }}
+            style={styles.avatar}
+          />
+        </Animated.View>
+        <Animated.ScrollView
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: { contentOffset: { y: this.state.scrollY } }
+              }
+            ],
+            {
+              useNativeDriver: true
+            }
+          )}
+        >
+          <View
+            style={StyleSheet.flatten([
+              styles.header,
+              { marginTop: 150 + Expo.Constants.statusBarHeight }
+            ])}
+          >
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              <Button rounded bordered style={styles.headerButton}>
+                <Icon
+                  name="ios-mail-outline"
+                  style={{ color: "#4286f4", paddingLeft: 8 }}
+                />
+              </Button>
+              <Button rounded bordered style={styles.headerButton}>
+                <Icon
+                  name="ios-notifications-outline"
+                  style={{ color: "#4286f4", paddingLeft: 8 }}
+                />
+              </Button>
+              <Button
+                bordered
+                rounded
+                primary
+                style={StyleSheet.flatten([
+                  styles.headerButton,
+                  { paddingLeft: 15, paddingRight: 15 }
+                ])}
               >
-                {this.user.following}
-              </Text>
-              <Text style={{ fontSize: 16, color: "#555", marginLeft: 5 }}>
-                Following
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{ fontSize: 16, fontWeight: "bold", marginLeft: 30 }}
-              >
-                {this.user.followers}
-              </Text>
-              <Text style={{ fontSize: 16, color: "#555", marginLeft: 5 }}>
-                Followers
-              </Text>
+                <Text style={{ color: "#4286f4" }}>Follow</Text>
+              </Button>
             </View>
           </View>
-        </View>
-        <View style={{ backgroundColor: "white", marginTop: 8 }}>
-          {this.props.fetchingUserTweets ? (
-            <View
-              contentContainerStyle={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Spinner color="blue" />
+
+          <View style={styles.header}>
+            <Text style={styles.nameText}>{this.user.name}</Text>
+            <Text style={styles.usernameText}>{"@" + this.user.username}</Text>
+            <Text style={styles.bioText}>{this.user.bio}</Text>
+            <Text style={styles.locationText}>
+              <Icon small name="ios-pin-outline" style={{ fontSize: 16 }} />
+              {" " + this.user.location}
+            </Text>
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: "bold", marginLeft: 14 }}
+                >
+                  {this.user.following}
+                </Text>
+                <Text style={{ fontSize: 16, color: "#555", marginLeft: 5 }}>
+                  Following
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: "bold", marginLeft: 30 }}
+                >
+                  {this.user.followers}
+                </Text>
+                <Text style={{ fontSize: 16, color: "#555", marginLeft: 5 }}>
+                  Followers
+                </Text>
+              </View>
             </View>
-          ) : (
-            <FlatList
-              data={this.props.userTweets}
-              keyExtractor={this._keyExtractor}
-              renderItem={({ item }) => (
-                <View style={styles.tweet}>
-                  {/* <TouchableHighlight
-                  onPress={this._profileClick.bind(this, item.user)}
-                  underlayColor="white"
-                  activeOpacity={0.75}
-                > */}
-                  <View style={{ flex: 1, flexDirection: "row" }}>
-                    <Thumbnail source={{ uri: this.user.avatar }} />
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        justifyContent: "flex-start"
-                      }}
-                    >
-                      <Text
+          </View>
+          <View style={{ backgroundColor: "white", marginTop: 8 }}>
+            {this.props.fetchingUserTweets ? (
+              <View
+                contentContainerStyle={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Spinner color="blue" />
+              </View>
+            ) : (
+              <FlatList
+                data={this.props.userTweets}
+                keyExtractor={this._keyExtractor}
+                renderItem={({ item }) => (
+                  <View style={styles.tweet}>
+                    <View style={{ flex: 1, flexDirection: "row" }}>
+                      <Thumbnail source={{ uri: this.user.avatar }} />
+                      <View
                         style={{
-                          paddingLeft: 15,
-                          fontWeight: "bold",
-                          fontSize: 20
+                          flexDirection: "column",
+                          justifyContent: "flex-start"
                         }}
                       >
-                        {this.user.name}
-                      </Text>
+                        <Text
+                          style={{
+                            paddingLeft: 15,
+                            fontWeight: "bold",
+                            fontSize: 20
+                          }}
+                        >
+                          {this.user.name}
+                        </Text>
 
-                      <Text
-                        style={{ paddingLeft: 15, color: "#aaa", fontSize: 16 }}
-                      >
-                        {"@" + this.user.username}
-                      </Text>
+                        <Text
+                          style={{
+                            paddingLeft: 15,
+                            color: "#aaa",
+                            fontSize: 16
+                          }}
+                        >
+                          {"@" + this.user.username}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* </TouchableHighlight> */}
+                    <Text style={styles.tweetText}>{item.tweetContent}</Text>
+                    <View style={styles.tweetFooter}>
+                      <View style={styles.footerIcons}>
+                        <Icon name="ios-text-outline" />
+                        <Text style={styles.badgeCount}>{item.replies}</Text>
+                      </View>
+                      <View style={styles.footerIcons}>
+                        <Icon name="ios-repeat" />
+                        <Text style={styles.badgeCount}>{item.retweets}</Text>
+                      </View>
+                      <View style={styles.footerIcons}>
+                        <Icon name="ios-heart-outline" />
+                        <Text style={styles.badgeCount}>{item.likes}</Text>
+                      </View>
+                      <View style={styles.footerIcons}>
+                        <Icon name="ios-mail-outline" />
+                      </View>
                     </View>
                   </View>
-                  {/* </TouchableHighlight> */}
-                  <Text style={styles.tweetText}>{item.tweetContent}</Text>
-                  <View style={styles.tweetFooter}>
-                    <Icon name="ios-text-outline">
-                      <Text style={styles.badgeCount}>{item.replies}</Text>
-                    </Icon>
-                    <Icon name="ios-repeat">
-                      <Text style={styles.badgeCount}>{item.retweets}</Text>
-                    </Icon>
-                    <Icon name="ios-heart-outline">
-                      <Text style={styles.badgeCount}>{item.likes}</Text>
-                    </Icon>
-                    <Icon name="ios-mail-outline" />
-                  </View>
-                </View>
-              )}
-            />
-          )}
-        </View>
-      </ScrollView>
+                )}
+              />
+            )}
+          </View>
+        </Animated.ScrollView>
+      </View>
     );
   }
 }
