@@ -1,5 +1,6 @@
 import { put, takeEvery, all, call } from "redux-saga/effects";
 import axios from "axios";
+import faker from "faker";
 
 const fetchTweets = function* fetchTweets() {
   console.log("into fetch tweets saga");
@@ -56,10 +57,27 @@ const watchLogin = function* watchLogin() {
         loginData.username === action.payload.username &&
         loginData.password === action.payload.password
       )
-        yield put({ type: "DO_LOGIN_SUCCESS" });
+        yield put({ type: "DO_LOGIN_SUCCESS", payload: loginData });
       else yield put({ type: "DO_LOGIN_FAILED" });
     } catch (error) {
       yield put({ type: "DO_LOGIN_FAILED" });
+    }
+  });
+};
+
+const watchPostTweet = function* watchPostTweet() {
+  yield takeEvery("POST_TWEET", function*(action) {
+    if (action.payload.tweetContent) {
+      yield put({ type: "POST_TWEET_STARTED" });
+      try {
+        yield call(postTweet.bind(this, action.payload));
+        yield put({ type: "POST_TWEET_SUCCESS" });
+        yield put({ type: "FETCH_TWEETS" });
+      } catch (error) {
+        yield put({ type: "POST_TWEET_FAILED" });
+      }
+    } else {
+      yield put({ type: "POST_TWEET_FAILED" });
     }
   });
 };
@@ -71,7 +89,8 @@ const rootSaga = function* rootSaga() {
     watchFetchUserTweets(),
     watchSetUsername(),
     watchSetPassword(),
-    watchLogin()
+    watchLogin(),
+    watchPostTweet()
   ]);
 };
 
@@ -94,6 +113,18 @@ const fetchUserTweetsData = () => {
 const attemptLogin = () => {
   return axios.get("http://10.0.1.75:3000/login").then(response => {
     return response.data;
+  });
+};
+
+const postTweet = payload => {
+  return axios.post("http://10.0.1.75:3000/tweets", {
+    id: faker.random.number(100000),
+    time: new Date().toISOString(),
+    user: payload.user,
+    tweetContent: payload.tweetContent,
+    likes: 0,
+    retweets: 0,
+    replies: 0
   });
 };
 

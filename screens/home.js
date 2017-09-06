@@ -100,23 +100,35 @@ const styles = StyleSheet.create({
     fetchingTweets: store.tweets.fetchingTweets,
     fetchedTweets: store.tweets.fetchedTweets,
     errorTweets: store.tweets.error,
-    username: store.login.username
+    user: store.login.user,
+    tweetPosted: store.tweets.tweetPosted,
+    newTweetModalOpen: store.tweets.newTweetModalOpen
   };
 })
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      newTweetContent: ""
     };
   }
 
   openModal() {
-    this.setState({ isOpen: true });
+    this.props.dispatch({ type: "NEW_TWEET_MODAL_OPEN" });
   }
 
   closeModal() {
-    this.setState({ isOpen: false });
+    this.props.dispatch({ type: "NEW_TWEET_MODAL_CLOSE" });
+  }
+
+  postTweet() {
+    this.props.dispatch({
+      type: "POST_TWEET",
+      payload: {
+        user: this.props.user,
+        tweetContent: this.state.newTweetContent
+      }
+    });
   }
 
   componentWillMount() {
@@ -130,7 +142,9 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    console.log(this.props);
+    if (this.props.tweetPosted === "success") {
+      this.closeModal();
+    }
     return (
       <ScrollableTabView
         style={styles.topMargin}
@@ -152,7 +166,7 @@ export default class HomeScreen extends Component {
               ref={"newTweetModal"}
               backdrop={false}
               style={styles.modal}
-              isOpen={this.state.isOpen}
+              isOpen={this.props.newTweetModalOpen}
               onClosed={this.closeModal.bind(this)}
             >
               <View
@@ -196,6 +210,8 @@ export default class HomeScreen extends Component {
                   }}
                   multiline
                   placeholder="What's happening?"
+                  onChangeText={tweet =>
+                    this.setState({ newTweetContent: tweet })}
                 />
               </View>
               <View style={styles.modalFooter}>
@@ -210,9 +226,11 @@ export default class HomeScreen extends Component {
                 </Button>
 
                 <View style={{ flex: 1 }} />
+                {this.props.tweetPosted === "ongoing" ? <Spinner /> : null}
                 <Button
                   rounded
                   style={{ color: "#4286f4", height: 40, width: 94 }}
+                  onPress={this.postTweet.bind(this)}
                 >
                   <Text style={{ color: "white" }}>Tweet</Text>
                 </Button>
@@ -279,7 +297,7 @@ export default class HomeScreen extends Component {
                 </View>
               )}
             />
-            {this.state.isOpen ? null : (
+            {this.state.newTweetModalOpen ? null : (
               <Fab
                 position="bottomRight"
                 style={{ backgroundColor: "#4286f4", zIndex: -1 }}

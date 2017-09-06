@@ -2,7 +2,8 @@ export default function reducer(
   state = {
     username: "",
     password: "",
-    loginStatus: "uninitiated"
+    loginStatus: "uninitiated",
+    user: {}
   },
   action
 ) {
@@ -22,7 +23,7 @@ export default function reducer(
       break;
     }
     case "DO_LOGIN_SUCCESS": {
-      return { ...state, loginStatus: "success" };
+      return { ...state, loginStatus: "success", user: action.payload };
       break;
     }
     case "DO_LOGIN_FAILED": {

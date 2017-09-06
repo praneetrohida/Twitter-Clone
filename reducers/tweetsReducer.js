@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 export default function reducer(
   state = {
     tweets: [],
@@ -6,7 +8,9 @@ export default function reducer(
     fetchedTweets: false,
     fetchingUserTweets: false,
     fetchedUserTweets: false,
-    error: null
+    error: null,
+    tweetPosted: "uninitiated",
+    newTweetModalOpen: false
   },
   action
 ) {
@@ -20,11 +24,13 @@ export default function reducer(
       break;
     }
     case "FETCH_TWEETS_FULFILLED": {
+      var sortedTweets = _.orderBy(action.payload, ["time"], ["desc"]);
+
       return {
         ...state,
         fetchedTweets: true,
         fetchingTweets: false,
-        tweets: action.payload,
+        tweets: sortedTweets,
         error: null
       };
       break;
@@ -45,6 +51,26 @@ export default function reducer(
         userTweets: action.payload,
         error: null
       };
+      break;
+    }
+    case "POST_TWEET_STARTED": {
+      return { ...state, tweetPosted: "ongoing" };
+      break;
+    }
+    case "POST_TWEET_SUCCESS": {
+      return { ...state, tweetPosted: "success" };
+      break;
+    }
+    case "POST_TWEET_FAILED": {
+      return { ...state, tweetPosted: "failed" };
+      break;
+    }
+    case "NEW_TWEET_MODAL_OPEN": {
+      return { ...state, newTweetModalOpen: true };
+      break;
+    }
+    case "NEW_TWEET_MODAL_CLOSE": {
+      return { ...state, newTweetModalOpen: false };
       break;
     }
     default: {
