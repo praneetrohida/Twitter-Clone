@@ -13,7 +13,7 @@ import { Root } from "native-base";
 import { Provider } from "react-redux";
 import store from "./store";
 import "regenerator-runtime/runtime";
-
+console.disableYellowBox = true;
 const AppNavigator = StackNavigator(
   {
     Login: { screen: LoginScreen },
@@ -33,9 +33,11 @@ export default class App extends Component {
       isLoading: true
     };
   }
+
   componentWillMount() {
     this.loadFonts();
   }
+
   async loadFonts() {
     await Expo.Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),

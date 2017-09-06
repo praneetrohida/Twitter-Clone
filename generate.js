@@ -32,6 +32,15 @@ module.exports = function() {
         retweets: faker.random.number(500),
         replies: faker.random.number(500)
       };
-    })
+    }),
+    login: {
+      username: "Batman",
+      password: "bruce",
+      name: "Batman",
+      bio: "The watchful protector",
+      location: "Gotham",
+      following: 0,
+      followers: 999
+    }
   };
 };

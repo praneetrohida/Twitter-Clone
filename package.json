@@ -30,6 +30,7 @@
     "native-base": "^2.3.1",
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
+    "react-native-modalbox": "^1.4.2",
     "react-native-parallax-scroll-view": "^0.19.0",
     "react-native-scrollable-tab-view": "^0.6.7",
     "react-native-svg": "^5.4.1",

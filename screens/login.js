@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import getTheme from "../native-base-theme/components";
 import platform from "../native-base-theme/variables/platform";
 import material from "../native-base-theme/variables/material";
+import { NavigationActions } from "react-navigation";
 import {
   Container,
   Button,
@@ -24,7 +25,8 @@ import {
   Form,
   Label,
   Footer,
-  FooterTab
+  FooterTab,
+  Spinner
 } from "native-base";
 import { setUsername } from "../actions/loginActions";
 import { connect } from "react-redux";
@@ -49,22 +51,44 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    height: 60
+    height: 60,
+    padding: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end"
   }
 });
 
 @connect(store => {
-  return {};
+  return {
+    username: store.login.username,
+    password: store.login.password,
+    loginStatus: store.login.loginStatus
+  };
 })
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
   }
   login() {
-    this.props.navigation.navigate("Home");
+    this.props.dispatch({
+      type: "DO_LOGIN",
+      payload: { username: this.props.username, password: this.props.password }
+    });
   }
 
+  componentWillMount() {}
+
   render() {
+    if (this.props.loginStatus === "success") {
+      console.log(this.props.navigation);
+      this.props.navigation.dispatch(
+        NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "Home" })]
+        })
+      );
+    }
     return (
       <StyleProvider style={getTheme(platform)}>
         <Container style={styles.topMargin}>
@@ -92,12 +116,22 @@ export default class LoginScreen extends Component {
                 <Label>Phone number, email address, or username</Label>
                 <Input
                   onChangeText={username =>
-                    this.props.dispatch(setUsername(username))}
+                    this.props.dispatch({
+                      type: "SET_USERNAME",
+                      payload: username
+                    })}
                 />
               </Item>
               <Item stackedLabel last>
                 <Label>Password</Label>
-                <Input secureTextEntry={true} />
+                <Input
+                  secureTextEntry={true}
+                  onChangeText={password =>
+                    this.props.dispatch({
+                      type: "SET_PASSWORD",
+                      payload: password
+                    })}
+                />
               </Item>
             </Form>
             <Button
@@ -117,15 +151,17 @@ export default class LoginScreen extends Component {
             </Button>
           </Content>
           <Footer style={styles.footer}>
-            <Right>
-              <Button
-                rounded
-                style={{ marginRight: 20, backgroundColor: "#4286f4" }}
-                onPress={this.login.bind(this)}
-              >
-                <Text>Log in</Text>
-              </Button>
-            </Right>
+            {this.props.loginStatus === "ongoing" ? <Spinner /> : null}
+            {this.props.loginStatus === "failed" ? (
+              <Text style={{ color: "#f92a3f" }}>Login Failed</Text>
+            ) : null}
+            <Button
+              rounded
+              style={{ backgroundColor: "#4286f4", marginLeft: 20 }}
+              onPress={this.login.bind(this)}
+            >
+              <Text>Log in</Text>
+            </Button>
           </Footer>
         </Container>
       </StyleProvider>
