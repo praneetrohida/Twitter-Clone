@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as Expo from "expo";
+import Modal from "react-native-modalbox";
 import {
   StyleSheet,
   View,
@@ -19,7 +20,11 @@ import {
   Row,
   Grid,
   Icon,
-  Spinner
+  Spinner,
+  Fab,
+  Button,
+  Footer,
+  Input
 } from "native-base";
 import { connect } from "react-redux";
 import { fetchTweets } from "../actions/tweetsActions";
@@ -67,6 +72,25 @@ const styles = StyleSheet.create({
   footerIcons: {
     flexDirection: "row",
     alignItems: "center"
+  },
+  modalFooter: {
+    backgroundColor: "white",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0.2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    height: 54,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 5
+  },
+  modal: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    zIndex: 4
   }
 });
 
@@ -82,6 +106,17 @@ const styles = StyleSheet.create({
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isOpen: false
+    };
+  }
+
+  openModal() {
+    this.setState({ isOpen: true });
+  }
+
+  closeModal() {
+    this.setState({ isOpen: false });
   }
 
   componentWillMount() {
@@ -112,64 +147,149 @@ export default class HomeScreen extends Component {
             <Spinner color="blue" />
           </View>
         ) : (
-          <FlatList
-            tabLabel="Home"
-            data={this.props.tweets}
-            keyExtractor={this._keyExtractor}
-            renderItem={({ item }) => (
-              <View style={styles.tweet}>
-                <TouchableHighlight
-                  onPress={this._profileClick.bind(this, item.user)}
-                  underlayColor="white"
-                  activeOpacity={0.75}
+          <View tabLabel="Home">
+            <Modal
+              ref={"newTweetModal"}
+              backdrop={false}
+              style={styles.modal}
+              isOpen={this.state.isOpen}
+              onClosed={this.closeModal.bind(this)}
+            >
+              <View
+                style={{
+                  alignSelf: "flex-start",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  padding: 5,
+                  paddingRight: 10
+                }}
+              >
+                <Button transparent onPress={this.closeModal.bind(this)}>
+                  <Icon name="close" style={{ color: "black", fontSize: 32 }} />
+                </Button>
+                <View style={{ flex: 1 }} />
+                <Thumbnail
+                  small
+                  source={{
+                    uri:
+                      "https://i1.wallpaperscraft.ru/image/betmen_art_minimalizm_107658_300x240.jpg"
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  width: "100%"
+                }}
+              >
+                <Input
+                  style={{
+                    flex: 1,
+                    width: "100%",
+                    fontSize: 24,
+                    alignContent: "flex-start",
+                    justifyContent: "flex-start",
+                    textAlignVertical: "top",
+                    margin: 5
+                  }}
+                  multiline
+                  placeholder="What's happening?"
+                />
+              </View>
+              <View style={styles.modalFooter}>
+                <Button transparent small>
+                  <Icon name="ios-image" />
+                </Button>
+                <Button transparent small>
+                  <Icon name="ios-pin" />
+                </Button>
+                <Button transparent small>
+                  <Icon name="ios-stats-outline" />
+                </Button>
+
+                <View style={{ flex: 1 }} />
+                <Button
+                  rounded
+                  style={{ color: "#4286f4", height: 40, width: 94 }}
                 >
-                  <View style={{ flex: 1, flexDirection: "row" }}>
-                    <Thumbnail source={{ uri: item.user.avatar }} />
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        justifyContent: "flex-start"
-                      }}
-                    >
-                      <Text
+                  <Text style={{ color: "white" }}>Tweet</Text>
+                </Button>
+              </View>
+            </Modal>
+            <FlatList
+              data={this.props.tweets}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item }) => (
+                <View style={styles.tweet}>
+                  <TouchableHighlight
+                    onPress={this._profileClick.bind(this, item.user)}
+                    underlayColor="white"
+                    activeOpacity={0.75}
+                  >
+                    <View style={{ flex: 1, flexDirection: "row" }}>
+                      <Thumbnail source={{ uri: item.user.avatar }} />
+                      <View
                         style={{
-                          paddingLeft: 15,
-                          fontWeight: "bold",
-                          fontSize: 20
+                          flexDirection: "column",
+                          justifyContent: "flex-start"
                         }}
                       >
-                        {item.user.name}
-                      </Text>
+                        <Text
+                          style={{
+                            paddingLeft: 15,
+                            fontWeight: "bold",
+                            fontSize: 20
+                          }}
+                        >
+                          {item.user.name}
+                        </Text>
 
-                      <Text
-                        style={{ paddingLeft: 15, color: "#aaa", fontSize: 16 }}
-                      >
-                        {"@" + item.user.username}
-                      </Text>
+                        <Text
+                          style={{
+                            paddingLeft: 15,
+                            color: "#aaa",
+                            fontSize: 16
+                          }}
+                        >
+                          {"@" + item.user.username}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableHighlight>
+                  <Text style={styles.tweetText}>{item.tweetContent}</Text>
+                  <View style={styles.tweetFooter}>
+                    <View style={styles.footerIcons}>
+                      <Icon name="ios-text-outline" />
+                      <Text style={styles.badgeCount}>{item.replies}</Text>
+                    </View>
+                    <View style={styles.footerIcons}>
+                      <Icon name="ios-repeat" />
+                      <Text style={styles.badgeCount}>{item.retweets}</Text>
+                    </View>
+                    <View style={styles.footerIcons}>
+                      <Icon name="ios-heart-outline" />
+                      <Text style={styles.badgeCount}>{item.likes}</Text>
+                    </View>
+                    <View style={styles.footerIcons}>
+                      <Icon name="ios-mail-outline" />
                     </View>
                   </View>
-                </TouchableHighlight>
-                <Text style={styles.tweetText}>{item.tweetContent}</Text>
-                <View style={styles.tweetFooter}>
-                  <View style={styles.footerIcons}>
-                    <Icon name="ios-text-outline" />
-                    <Text style={styles.badgeCount}>{item.replies}</Text>
-                  </View>
-                  <View style={styles.footerIcons}>
-                    <Icon name="ios-repeat" />
-                    <Text style={styles.badgeCount}>{item.retweets}</Text>
-                  </View>
-                  <View style={styles.footerIcons}>
-                    <Icon name="ios-heart-outline" />
-                    <Text style={styles.badgeCount}>{item.likes}</Text>
-                  </View>
-                  <View style={styles.footerIcons}>
-                    <Icon name="ios-mail-outline" />
-                  </View>
                 </View>
-              </View>
+              )}
+            />
+            {this.state.isOpen ? null : (
+              <Fab
+                position="bottomRight"
+                style={{ backgroundColor: "#4286f4", zIndex: -1 }}
+                onPress={this.openModal.bind(this)}
+                ref={"FAB"}
+              >
+                <Icon name="md-create" />
+              </Fab>
             )}
-          />
+          </View>
         )}
 
         <View tabLabel="Search">
