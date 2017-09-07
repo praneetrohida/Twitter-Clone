@@ -7,7 +7,8 @@ import {
   View,
   Text,
   FlatList,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform
 } from "react-native";
 import {
   Container,
@@ -36,8 +37,9 @@ import ScrollableTabView, {
 
 const styles = StyleSheet.create({
   topMargin: {
-    marginTop: Expo.Constants.statusBarHeight,
-    backgroundColor: "white"
+    marginTop: Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight,
+    backgroundColor: "white",
+    zIndex: -1
   },
   content: {
     padding: 10,
@@ -92,7 +94,9 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: "flex-start",
     alignItems: "center",
+    position: "absolute",
     zIndex: 4,
+    elevation: 4,
     height: Dimensions.get("window").height - Expo.Constants.statusBarHeight,
     marginTop: Expo.Constants.statusBarHeight / 2
   }
@@ -145,25 +149,32 @@ export default class HomeScreen extends Component {
     this.props.navigation.navigate("Profile", user);
   }
 
+  _tweetDetails(tweet) {
+    this.props.navigation.navigate("TweetDetails", tweet);
+  }
+
   render() {
     if (this.props.tweetPosted === "success") {
       this.closeModal();
     }
     return (
       <Container>
-        <Header>
-          <Left>
-            <Thumbnail small source={{ uri: this.props.user.avatar }} />
-          </Left>
-          <Body>
-            <Title>Home</Title>
-          </Body>
-          <Right>
-            <Button transparent onPress={this.openModal.bind(this)}>
-              <Icon name="md-create" />
-            </Button>
-          </Right>
-        </Header>
+        {this.props.newTweetModalOpen && Platform.OS === "android" ? null : (
+          <Header style={styles.topMargin}>
+            <Left>
+              <Thumbnail small source={{ uri: this.props.user.avatar }} />
+            </Left>
+            <Body>
+              <Title style={{ color: "#121212" }}>Home</Title>
+            </Body>
+            <Right>
+              <Button transparent onPress={this.openModal.bind(this)}>
+                <Icon name="md-create" style={{ color: "#4286f4" }} />
+              </Button>
+            </Right>
+          </Header>
+        )}
+
         <Modal
           ref={"newTweetModal"}
           backdrop={true}
@@ -293,19 +304,31 @@ export default class HomeScreen extends Component {
                     <Text style={styles.tweetText}>{item.tweetContent}</Text>
                     <View style={styles.tweetFooter}>
                       <View style={styles.footerIcons}>
-                        <Icon name="ios-text-outline" />
-                        <Text style={styles.badgeCount}>{item.replies}</Text>
+                        <Button
+                          transparent
+                          dark
+                          onPress={this._tweetDetails.bind(this, item)}
+                        >
+                          <Icon name="ios-text-outline" />
+                          <Text style={styles.badgeCount}>{item.replies}</Text>
+                        </Button>
                       </View>
                       <View style={styles.footerIcons}>
-                        <Icon name="ios-repeat" />
-                        <Text style={styles.badgeCount}>{item.retweets}</Text>
+                        <Button transparent dark>
+                          <Icon name="ios-repeat" />
+                          <Text style={styles.badgeCount}>{item.retweets}</Text>
+                        </Button>
                       </View>
                       <View style={styles.footerIcons}>
-                        <Icon name="ios-heart-outline" />
-                        <Text style={styles.badgeCount}>{item.likes}</Text>
+                        <Button transparent dark>
+                          <Icon name="ios-heart-outline" />
+                          <Text style={styles.badgeCount}>{item.likes}</Text>
+                        </Button>
                       </View>
                       <View style={styles.footerIcons}>
-                        <Icon name="ios-mail-outline" />
+                        <Button transparent dark>
+                          <Icon name="ios-mail-outline" />
+                        </Button>
                       </View>
                     </View>
                   </View>

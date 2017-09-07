@@ -8,6 +8,7 @@ import { StackNavigator } from "react-navigation";
 import LoginScreen from "./screens/login";
 import HomeScreen from "./screens/home";
 import ProfileScreen from "./screens/profile";
+import TweetDetailsScreen from "./screens/tweetDetails";
 import { Root } from "native-base";
 
 import { Provider } from "react-redux";
@@ -18,7 +19,8 @@ const AppNavigator = StackNavigator(
   {
     Login: { screen: LoginScreen },
     Home: { screen: HomeScreen },
-    Profile: { screen: ProfileScreen }
+    Profile: { screen: ProfileScreen },
+    TweetDetails: { screen: TweetDetailsScreen }
   },
   {
     initialRouteName: "Login",

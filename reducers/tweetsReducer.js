@@ -4,8 +4,11 @@ export default function reducer(
   state = {
     tweets: [],
     userTweets: [],
+    tweetReplies: [],
     fetchingTweets: false,
     fetchedTweets: false,
+    fetchingTweetReplies: false,
+    fetchedTweetReplies: false,
     fetchingUserTweets: false,
     fetchedUserTweets: false,
     error: null,
@@ -71,6 +74,26 @@ export default function reducer(
     }
     case "NEW_TWEET_MODAL_CLOSE": {
       return { ...state, newTweetModalOpen: false };
+      break;
+    }
+    case "FETCH_TWEET_REPLIES_STARTED": {
+      return { ...state, fetchingTweetReplies: true };
+      break;
+    }
+    case "FETCH_TWEET_REPLIES_REJECTED": {
+      return { ...state, fetchingTweetReplies: false, error: action.payload };
+      break;
+    }
+    case "FETCH_TWEET_REPLIES_FULFILLED": {
+      var sortedTweets = _.orderBy(action.payload, ["time"], ["desc"]);
+
+      return {
+        ...state,
+        fetchedTweetReplies: true,
+        fetchingTweetReplies: false,
+        tweetReplies: sortedTweets,
+        error: null
+      };
       break;
     }
     default: {
