@@ -30,17 +30,10 @@ import {
   Right
 } from "native-base";
 import { connect } from "react-redux";
-<<<<<<< HEAD
 // import { fetchTweets } from "../actions/tweetsActions";
 // import ScrollableTabView, {
 //   ScrollableTabBar
 // } from "react-native-scrollable-tab-view";
-=======
-import { fetchTweets } from "../actions/tweetsActions";
-import ScrollableTabView, {
-  ScrollableTabBar
-} from "react-native-scrollable-tab-view";
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
 
 const styles = StyleSheet.create({
   topMargin: {
@@ -120,10 +113,6 @@ const styles = StyleSheet.create({
     newTweetModalOpen: store.tweets.newTweetModalOpen
   };
 })
-<<<<<<< HEAD
-
-=======
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);

@@ -25,17 +25,10 @@ import {
   Button,
   Spinner
 } from "native-base";
-<<<<<<< HEAD
 // import ParallaxScrollView from "react-native-parallax-scroll-view";
 
 import { connect } from "react-redux";
 // import { fetchTweets } from "../actions/tweetsActions";
-=======
-import ParallaxScrollView from "react-native-parallax-scroll-view";
-
-import { connect } from "react-redux";
-import { fetchTweets } from "../actions/tweetsActions";
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 

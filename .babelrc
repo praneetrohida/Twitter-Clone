@@ -1,12 +1,3 @@
 {
-<<<<<<< HEAD
   "presets": ["babel-preset-expo"]
-=======
-  "presets": ["babel-preset-expo"],
-  "env": {
-    "development": {
-      "plugins": ["transform-react-jsx-source"]
-    }
-  }
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
 }

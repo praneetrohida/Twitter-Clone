@@ -112,54 +112,34 @@ const rootSaga = function* rootSaga() {
 export default rootSaga;
 
 const fetchTweetsData = () => {
-<<<<<<< HEAD
   return axios.get("http://192.168.100.5:3000/tweets").then(response => {
-=======
-  return axios.get("http://10.0.1.75:3000/tweets").then(response => {
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
     console.log(response);
     return response.data;
   });
 };
 
 const fetchTweetRepliesData = () => {
-<<<<<<< HEAD
   return axios.get("http://192.168.100.5:3000/tweetReplies").then(response => {
-=======
-  return axios.get("http://10.0.1.75:3000/tweetReplies").then(response => {
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
     console.log(response);
     return response.data;
   });
 };
 
 const fetchUserTweetsData = () => {
-<<<<<<< HEAD
   return axios.get("http://192.168.100.5:3000/userTweets").then(response => {
-=======
-  return axios.get("http://10.0.1.75:3000/userTweets").then(response => {
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
     console.log(response);
     return response.data;
   });
 };
 
 const attemptLogin = () => {
-<<<<<<< HEAD
   return axios.get("http://192.168.100.5:3000/login").then(response => {
-=======
-  return axios.get("http://10.0.1.75:3000/login").then(response => {
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
     return response.data;
   });
 };
 
 const postTweet = payload => {
-<<<<<<< HEAD
   return axios.post("http://192.168.100.5:3000/tweets", {
-=======
-  return axios.post("http://10.0.1.75:3000/tweets", {
->>>>>>> 674610a120af4d4d80bcd75152784d151f4de279
     id: faker.random.number(100000),
     time: new Date().toISOString(),
     user: payload.user,
