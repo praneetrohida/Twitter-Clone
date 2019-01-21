@@ -1,0 +1,47 @@
+{
+  "name": "twitter-clone",
+  "version": "0.1.0",
+  "private": false,
+  "devDependencies": {
+    "babel-preset-react-native": "^2.0.0",
+    "jest-expo": "~20.0.0",
+    "react-test-renderer": "16.0.0-alpha.12"
+  },
+  "main": "./node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "eject": "expo eject",
+    "android": "expo android",
+    "ios": "expo ios",
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "serve": "json-server generate.js"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^9.0.0",
+    "axios": "^0.16.2",
+    "color": "^2.0.0",
+    "expo": "^32.0.0",
+    "faker": "^4.1.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "native-base": "^2.3.1",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "^0.57.8",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-modalbox": "^1.4.2",
+    "react-native-parallax-scroll-view": "^0.19.0",
+    "react-native-scrollable-tab-view": "^0.6.7",
+    "react-native-svg": "^5.4.1",
+    "react-navigation": "^1.0.0-beta.11",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-promise-middleware": "^4.4.1",
+    "redux-saga": "^0.15.6",
+    "redux-thunk": "^2.2.0",
+    "regenerator-runtime": "^0.11.0"
+  }
+}
