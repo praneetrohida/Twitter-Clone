@@ -112,34 +112,34 @@ const rootSaga = function* rootSaga() {
 export default rootSaga;
 
 const fetchTweetsData = () => {
-  return axios.get("http://10.0.1.75:3000/tweets").then(response => {
+  return axios.get("http://192.168.100.5:3000/tweets").then(response => {
     console.log(response);
     return response.data;
   });
 };
 
 const fetchTweetRepliesData = () => {
-  return axios.get("http://10.0.1.75:3000/tweetReplies").then(response => {
+  return axios.get("http://192.168.100.5:3000/tweetReplies").then(response => {
     console.log(response);
     return response.data;
   });
 };
 
 const fetchUserTweetsData = () => {
-  return axios.get("http://10.0.1.75:3000/userTweets").then(response => {
+  return axios.get("http://192.168.100.5:3000/userTweets").then(response => {
     console.log(response);
     return response.data;
   });
 };
 
 const attemptLogin = () => {
-  return axios.get("http://10.0.1.75:3000/login").then(response => {
+  return axios.get("http://192.168.100.5:3000/login").then(response => {
     return response.data;
   });
 };
 
 const postTweet = payload => {
-  return axios.post("http://10.0.1.75:3000/tweets", {
+  return axios.post("http://192.168.100.5:3000/tweets", {
     id: faker.random.number(100000),
     time: new Date().toISOString(),
     user: payload.user,

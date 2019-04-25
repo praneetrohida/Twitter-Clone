@@ -32,9 +32,9 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { fetchTweets } from "../actions/tweetsActions";
-import ScrollableTabView, {
-  ScrollableTabBar
-} from "react-native-scrollable-tab-view";
+// import ScrollableTabView, {
+//   ScrollableTabBar
+// } from "react-native-scrollable-tab-view";
 
 const styles = StyleSheet.create({
   tweetHead: {
